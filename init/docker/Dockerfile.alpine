@@ -1,7 +1,5 @@
 FROM golang:1.26.0-alpine AS builder
 
-# Build speed magic!
-# https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
 WORKDIR /src
 COPY main.go go.mod go.sum ./
 
@@ -9,9 +7,13 @@ COPY main.go go.mod go.sum ./
 RUN go mod download \
     && go run github.com/swaggo/swag/cmd/swag@latest -v
 
+# Install Node.js to build the frontend.
 RUN apk add nodejs npm
+
+# Copy the source code.
 COPY pkg pkg
 COPY frontend frontend
+# Build the frontend.
 RUN --mount=type=secret,id=FONTAWESOME_PACKAGE_TOKEN,env=FONTAWESOME_PACKAGE_TOKEN \
     mkdir -p ./frontend/dist \
     && echo "Fake frontend build." > ./frontend/dist/index.html \
@@ -36,12 +38,12 @@ RUN GOFLAGS="-trimpath -mod=readonly -modcacherw" \
     -X \"golift.io/version.Version=${VERSION}\""
 
 FROM alpine
-
+# Copy the binary.
 COPY --from=builder /tmp/notifiarr /
-# Other tools.
-RUN apk add ipmitool smartmontools zfs sysstat && \
+# Other tools. (iostat is the wrong version on Alpine.)
+RUN apk add ipmitool smartmontools zfs sysstat libncurses6 && \
     rm -f /bin/iostat
-
+# Defaults.
 ENV TZ=UTC
 ENV PATH=/bin:/usr/bin:/sbin:/usr/sbin
 ENV USER=root
@@ -49,6 +51,7 @@ ENV USER=root
 EXPOSE 5454
 ENTRYPOINT [ "/notifiarr" ]
 
+# Label inputs.
 ARG TARGETOS
 ARG TARGETARCH
 ARG BUILD_DATE
