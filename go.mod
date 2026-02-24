@@ -40,7 +40,7 @@ require (
 	golang.org/x/text v0.34.0
 	golang.org/x/time v0.14.0
 	golift.io/cache v0.0.2
-	golift.io/cnfg v0.2.4
+	golift.io/cnfg v0.2.5
 	golift.io/cnfgfile v0.0.0-20240713024420-a5436d84eb48
 	golift.io/datacounter v1.0.4
 	golift.io/deluge v0.10.1
@@ -52,7 +52,7 @@ require (
 	golift.io/starr v1.3.0
 	golift.io/version v0.0.2
 	golift.io/xtractr v0.3.0
-	modernc.org/sqlite v1.45.0
+	modernc.org/sqlite v1.46.1
 )
 
 require (
