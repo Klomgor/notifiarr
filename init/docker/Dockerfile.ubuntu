@@ -1,7 +1,5 @@
 FROM golang:1.26.0-trixie AS builder
 
-# Build speed magic!
-# https://www.docker.com/blog/faster-multi-platform-builds-dockerfile-cross-compilation-guide/
 WORKDIR /src
 COPY main.go go.mod go.sum ./
 
@@ -9,6 +7,7 @@ COPY main.go go.mod go.sum ./
 RUN go mod download \
     && go run github.com/swaggo/swag/cmd/swag@latest -v
 
+ENV DEBIAN_FRONTEND=noninteractive
 RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash \
     && apt install -y nodejs
 
@@ -44,26 +43,24 @@ RUN GOFLAGS="-trimpath -mod=readonly -modcacherw" \
     -X \"golift.io/version.Version=${VERSION}\""
 
 FROM ubuntu:24.04
-
+# Copy the binary.
 COPY --from=builder /tmp/notifiarr /
 # Other tools.
-RUN apt update \
-    && apt install -y smartmontools ipmitool zfsutils-linux sysstat \
+RUN DEBIAN_FRONTEND=noninteractive apt update \
+    && apt install -y smartmontools ipmitool zfsutils-linux sysstat libncurses6 \
     && apt clean \
     && rm -rf /var/lib/apt/lists/*
-# For megacli.
+# For LSI Avago Broadcom MegaCli.
 COPY --from=builder /MegaCli* /libstorelibir-2.so.14.07-0 /
-RUN mkdir -p /usr/lib/x86_64-linux-gnu && \
-    ln -s /usr/lib/x86_64-linux-gnu/libncurses.so.6 /usr/lib/x86_64-linux-gnu/libncurses.so.5
-
+# Defaults.
 ENV TZ=UTC
 ENV PATH=/bin:/usr/bin:/sbin:/usr/sbin
 ENV USER=root
-ENV DN_SNAPSHOT_NVIDIA_SMI_PATH=/usr/bin/nvidia-smi
 
 EXPOSE 5454
 ENTRYPOINT [ "/notifiarr" ]
 
+# Label inputs.
 ARG TARGETOS
 ARG TARGETARCH
 ARG BUILD_DATE

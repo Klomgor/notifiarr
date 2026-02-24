@@ -47,8 +47,8 @@ const (
 const (
 	Title            = "Notifiarr"
 	DefaultName      = "notifiarr"
-	DefaultLogFileMb = 100
-	DefaultLogFiles  = 0 // delete none
+	DefaultLogFileMb = 5
+	DefaultLogFiles  = 10
 	DefaultEnvPrefix = "DN"
 	DefaultTimeout   = time.Minute
 	DefaultBindAddr  = "0.0.0.0:5454"

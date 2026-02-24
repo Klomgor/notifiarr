@@ -46,8 +46,8 @@ type Logger struct {
 //
 //nolint:gochecknoglobals
 var (
-	logFiles  = 1
-	logFileMb = 100
+	logFiles  = 10
+	logFileMb = 5
 	customLog = make(map[string]*rotatorr.Logger)
 )
 
