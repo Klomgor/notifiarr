@@ -50,6 +50,7 @@ func (c *Client) SetupWebServer() {
 func (c *Client) RunWebServer() {
 	defer logs.Log.CapturePanic()
 
+	c.Lock() // StopWebServer() may still be running, so we need to lock.
 	// Create a server.
 	c.server = &http.Server{
 		Handler:           c.mux,
@@ -60,6 +61,7 @@ func (c *Client) RunWebServer() {
 		ReadHeaderTimeout: c.Config.Timeout.Duration,
 		ErrorLog:          logs.Log.ErrorLog,
 	}
+	c.Unlock()
 
 	if menu["stat"] != nil {
 		menu["stat"].Enable()

@@ -34,7 +34,10 @@ type RadarrTrashPayload struct {
 
 // SyncRadarrCF initializes a custom format sync with radarr.
 func (a *Action) SyncRadarrCF(input *common.ActionInput) {
-	a.cmd.Exec(input, TrigCFSyncRadarr)
+	if !a.cmd.Exec(input, TrigCFSyncRadarr) {
+		mnd.Log.Errorf(input.ReqID,
+			"[%s requested] Cannot sync Radarr profiles and formats. No Radarr instances configured.", input.Type)
+	}
 }
 
 // SyncRadarrInstanceCF initializes a custom format sync with a specific radarr instance.

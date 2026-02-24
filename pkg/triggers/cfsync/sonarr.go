@@ -35,7 +35,10 @@ type SonarrTrashPayload struct {
 
 // SyncSonarrRP initializes a release profile sync with sonarr.
 func (a *Action) SyncSonarrRP(input *common.ActionInput) {
-	a.cmd.Exec(input, TrigCFSyncSonarr)
+	if !a.cmd.Exec(input, TrigCFSyncSonarr) {
+		mnd.Log.Errorf(input.ReqID,
+			"[%s requested] Cannot sync Sonarr profiles and formats. No Sonarr instances configured.", input.Type)
+	}
 }
 
 // SyncSonarrInstanceRP initializes a release profile sync with a specific sonarr instance.
