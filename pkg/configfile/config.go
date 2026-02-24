@@ -78,6 +78,7 @@ func NewConfig() *Config {
 		AppsConfig: apps.AppsConfig{
 			BaseConfig: apps.BaseConfig{
 				URLBase: "/",
+				MaxBody: mnd.KB100,
 			},
 		},
 		Services: services.Config{},

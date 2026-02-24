@@ -566,7 +566,6 @@ version = {{.Version}}
   disabled = true{{end}}{{end}}
 {{end}}{{end}}
 
-
 ###################
 # Custom Commands #
 ###################
