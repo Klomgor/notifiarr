@@ -1,10 +1,12 @@
 package scheduler
 
 import (
+	"context"
 	"fmt"
 	"strings"
 	"time"
 
+	"github.com/Notifiarr/notifiarr/pkg/mnd"
 	"github.com/go-co-op/gocron/v2"
 )
 
@@ -227,4 +229,23 @@ func (c *CronJob) New(cron gocron.Scheduler, cmd func()) gocron.Job { //nolint:i
 	}
 
 	return job
+}
+
+// Stop stops all jobs in the scheduler and pauses it.
+// You can then add jobs back and start it again.
+// This is used to stop the scheduler when the app is shutting down or reloading configurations.
+func Stop(ctx context.Context, cron gocron.Scheduler) {
+	defer mnd.Log.CapturePanic()
+
+	for _, job := range cron.Jobs() {
+		err := cron.RemoveJob(job.ID())
+		if err != nil {
+			mnd.Log.Errorf(mnd.GetID(ctx), "Removing job: %v", err)
+		}
+	}
+
+	err := cron.StopJobs()
+	if err != nil {
+		mnd.Log.Errorf(mnd.GetID(ctx), "Stopping jobs: %v", err)
+	}
 }

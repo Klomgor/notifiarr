@@ -149,9 +149,9 @@ func (c *Config) runTimerLoop(ctx context.Context, actions []*Action, cases []re
 	c.Scheduler.Start()
 
 	defer func() {
-		mnd.Log.CapturePanic()
+		defer mnd.Log.CapturePanic()
+		scheduler.Stop(ctx, c.Scheduler)
 		c.stopTimerLoop(ctx, actions)
-		_ = c.Scheduler.Shutdown()
 	}()
 
 	// This is how you watch a slice of reflect.SelectCase.

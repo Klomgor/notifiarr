@@ -168,6 +168,7 @@ func (c *Config) Stop(event website.EventType) context.Context {
 	c.stop.C <- &ActionInput{Type: event, ReqID: mnd.ReqID()}
 	<-c.stop.C // wait for done signal.
 	c.stop = nil
+	c.list = nil
 
 	return <-c.sharedCtx
 }
