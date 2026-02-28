@@ -236,12 +236,14 @@
             "options": {
                 "noauth": "Geen wachtwoord (gevaar)",
                 "password": "Wachtwoord: Lokale gebruikersnaam",
-                "header": "Auth Proxy: koptekst"
+                "header": "Auth Proxy: koptekst",
+                "website": "Websitegegevens"
             },
             "option_desc": {
                 "header": "Selecteer deze optie om in te loggen bij deze applicatie met een HTTP header die een gebruikersnaam bevat. Dit staat algemeen bekend als proxy authenticatie. We hebben <a href=\"https://notifiarr.wiki/pages/client/reverseProxy/\" target=\"_blank\">een wikipagina</a> met instructies voor het configureren van Nginx voor deze functie. Wanneer u deze optie selecteert, moet u ook een header voor de auth proxy selecteren. Als er geen headers worden weergegeven, zijn er geen geldige headers door de upstream proxy verstrekt.",
                 "password": " Dit is het standaard authenticatie type. Selecteer de optie 'Wachtwoord' om in te loggen bij deze applicatie met een geconfigureerde gebruikersnaam en wachtwoord. Er wordt slechts één gebruikersnaam en wachtwoord ondersteund. Wanneer u deze optie selecteert, moet u de velden voor de gebruikersnaam en het nieuwe wachtwoord invullen. Als dit het huidige authenticatietype is, moet u ook het veld voor het huidige wachtwoord invullen om wijzigingen aan te brengen.",
-                "noauth": "Deze configuratie wordt niet aanbevolen. Het authenticatietype 'Geen wachtwoord' staat alle verzoeken toe van elk geconfigureerd <code>upstream IP</code>. Het werkt ook met een authenticatie proxy om de gebruikersnaam in te stellen. Als er geen gebruikersnaam in de opgegeven header staat, wordt standaard admin gebruikt."
+                "noauth": "Deze configuratie wordt niet aanbevolen. Het authenticatietype 'Geen wachtwoord' staat alle verzoeken toe van elk geconfigureerd <code>upstream IP</code>. Het werkt ook met een authenticatie proxy om de gebruikersnaam in te stellen. Als er geen gebruikersnaam in de opgegeven header staat, wordt standaard admin gebruikt.",
+                "website": "Selecteer deze optie om in te loggen op deze applicatie met uw websitegegevens. Hiermee kunt u inloggen op de client met uw e-mailadres of gebruikersnaam en wachtwoord van Notifiarr.com. Uw wachtwoord is altijd veilig en versleuteld voordat het naar de client wordt verzonden."
             },
             "label": "Authenticatie type",
             "description": "Selecteer hoe u zich wilt authenticeren bij de client"
@@ -268,7 +270,7 @@
         },
         "password": {
             "label": "Huidig wachtwoord",
-            "description": "Uw inlogwachtwoord",
+            "description": "Voer uw huidige wachtwoord in om wijzigingen aan te brengen.",
             "placeholder": "Voer uw huidige wachtwoord in"
         },
         "newPass": {
@@ -481,6 +483,11 @@
             "label": "Log bestand Unix modus",
             "description": "Dit is de Unix bestandsmodus die wordt gebruikt bij het schrijven van nieuwe logbestanden.",
             "tooltip": "Aanbevolen waarden in volgorde van openheid: 0600, 0640, 0644"
+        },
+        "trace": {
+            "description": "Trace logging in- of uitschakelen.",
+            "tooltip": "Door Trace in te schakelen, wordt een zeer gedetailleerde uitvoerings naar het logboek geschreven. Gebruik dit voor diepgaande foutopsporing.",
+            "label": "Trace Logging"
         }
     },
     "system": {
@@ -1074,7 +1081,7 @@
             "description": "Opdracht om uit te voeren.",
             "required": "Opdracht is vereist",
             "placeholder": "echo 'Hallo wereld!'",
-            "tooltip": "Dit is de opdracht die wordt uitgevoerd wanneer deze wordt geactiveerd.<br />Klik op het vinkje om de opdracht direct uit te voeren. Klik na afloop op Vernieuwen en uitvoer weergeven om de resultaten te bekijken.<br /><br />Vink het vakje aan om de opdracht in een shell te plaatsen. In Windows wordt de opdracht uitgevoerd met <code>cmd.exe</code> en op andere besturingssystemen met <code>/bin/bash</code>. Dit is handig voor opdrachten die shell-functies zoals pipes en redirects vereisen. Aangepaste positionele argumenten kunnen worden gedefinieerd met de volgende notatie: <code>({regex})</code> - een reguliere expressie tussen accolades en haakjes, d.w.z. <code>({[a-z]})</code>. Deze argumenten kunnen worden ingevuld door de persoon die de opdracht uitvoert; in deze web interface of op uw chat server. Als een opdracht een argument heeft, is dit vereist; Als er meerdere argumenten zijn, zijn ze allemaal vereist.<br /><br /> <h5>Voorbeelden</h5>Opdracht met twee argumenten: <code>/bin/ls ({-la|-l|-a|-al}) ({/tmp|/|/home|/lib})</code><br />Met de bovenstaande opdracht kan een gebruiker elke combinatie van <code>ls -la</code> uitvoeren op <code>/tmp</code>, <code>/</code>, <code>/home</code> of <code>/lib</code>.<br /> Deze opdracht kan worden gebruikt om websites te curlen vanuit de Docker-container: <code>/notifiarr --curl ({https?://[^ ;]+})</code>"
+            "tooltip": "Dit is de opdracht die wordt uitgevoerd wanneer deze wordt geactiveerd.<br />Klik op het dubbelvinkje om de opdracht direct uit te voeren. Klik na afloop op Vernieuwen en Uitvoer weergeven om de resultaten te bekijken.<br /><br />Vink het vakje aan om de opdracht in een shell te plaatsen. Op Windows wordt de opdracht uitgevoerd met <code>cmd.exe</code> en op andere besturingssystemen met <code>/bin/bash</code>. Dit is handig voor opdrachten die shellfuncties zoals pipes en redirects vereisen. Aangepaste positionele argumenten kunnen worden gedefinieerd met dit formaat: <code>({regex})</code> - dat wil zeggen een reguliere expressie tussen accolades en haakjes, bijvoorbeeld <code>({[a-z]})</code>. Deze argumenten kunnen worden ingevuld door de persoon die de opdracht uitvoert; in deze webinterface of op uw chatserver. Als een opdracht een argument heeft, is dit verplicht; Als een opdracht meerdere argumenten heeft, zijn ze allemaal verplicht.<br /><br /> <h5>Voorbeelden</h5>Opdracht met twee argumenten: <code>/bin/ls ({-la|-l|-a|-al}) ({/tmp|/|/home|/lib})</code><br />Met de bovenstaande opdracht kan een gebruiker elke combinatie van <code>ls -la</code> uitvoeren op <code>/tmp</code>, <code>/</code>, <code>/home</code> of <code>/lib</code>."
         },
         "title": "Commando lijst",
         "addInstance": "Opdracht maken",
@@ -1517,7 +1524,7 @@
             "description": "Triggers, timers en schema's uitgevoerd.",
             "empty": "Nog geen acties geactiveerd."
         },
-        "CountersReset": "De tellers op deze pagina worden gereset wanneer de applicatie wordt afgesloten.",
+        "CountersReset": "De tellers op deze pagina worden gereset wanneer de applicatie wordt afgesloten. De applicatie stelt deze tellers beschikbaar via Prometheus. U kunt ze scrapen en het <a href=\"https://grafana.com/grafana/dashboards/24776-notifiarr-client/\" target=\"_blank\">Notifiarr Client Grafana dashboard</a> gebruiken om ze te visualiseren.",
         "website": {
             "title": "Website verzoeken",
             "description": "Verzoeken aan Notifiarr.com.",
